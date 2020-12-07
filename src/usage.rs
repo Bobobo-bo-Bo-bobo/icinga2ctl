@@ -32,3 +32,16 @@ pub fn show_usage() {
         constants::NAME
     );
 }
+
+pub fn show_usage_status() {
+    show_version();
+    println!(
+        "   status
+        -H <host_object>            Show status of host objects
+        --host=<host_object>
+
+        -S <service_object>         Show status of service objects
+        --service=<service_object>
+"
+    );
+}

@@ -30,6 +30,22 @@ fn main() {
                 .long("version")
                 .help("Show version information"),
         ])
+        .subcommand(
+            SubCommand::with_name("status")
+                .about("Show status of host and service objects")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true)
+                        .help("Show status of host objects"),
+                    Arg::with_name("service_object")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true)
+                        .help("Show status of service objects"),
+                ]),
+        )
         .get_matches();
 
     if options.is_present("help") {
@@ -63,6 +79,17 @@ fn main() {
                 "Error: Can't parse configuration file {}: {}",
                 config_file, e
             );
+            process::exit(1);
+        }
+    };
+
+    match options.subcommand() {
+        ("status", Some(m)) => {
+            println!("Status");
+        }
+        _ => {
+            eprintln!("Error: No command provided");
+            usage::show_usage();
             process::exit(1);
         }
     };
