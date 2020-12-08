@@ -1,12 +1,14 @@
 #[macro_use]
 extern crate simple_error;
 
+mod command;
 mod configuration;
 mod constants;
+mod json_data;
+mod request;
 mod usage;
 
 use clap::{App, Arg, SubCommand};
-use std::env;
 use std::process;
 
 fn main() {
@@ -44,6 +46,10 @@ fn main() {
                         .long("service")
                         .takes_value(true)
                         .help("Show status of service objects"),
+                    Arg::with_name("help")
+                        .short("h")
+                        .long("help")
+                        .help("Show help text for status command"),
                 ]),
         )
         .get_matches();
@@ -85,7 +91,10 @@ fn main() {
 
     match options.subcommand() {
         ("status", Some(m)) => {
-            println!("Status");
+            if let Err(e) = command::status(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
         }
         _ => {
             eprintln!("Error: No command provided");

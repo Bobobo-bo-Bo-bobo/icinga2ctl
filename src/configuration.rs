@@ -4,16 +4,17 @@ use ini::Ini;
 use std::env;
 use std::error::Error;
 use std::str::FromStr;
+use url::Url;
 
 pub struct Configuration {
-    url: String,
-    ca_file: String,
-    insecure_ssl: bool,
-    auth: u8,
-    auth_user: String,
-    auth_password: String,
-    auth_pubkey: String,
-    auth_privkey: String,
+    pub url: String,
+    pub ca_file: String,
+    pub insecure_ssl: bool,
+    pub auth: u8,
+    pub auth_user: String,
+    pub auth_password: String,
+    pub auth_pubkey: String,
+    pub auth_privkey: String,
 }
 
 pub fn get_default_user_config_file() -> Result<String, Box<dyn Error>> {
@@ -70,10 +71,10 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
                             }
                         };
                     }
-                    "auth_user" => {
+                    "user" => {
                         config.auth_user = value.to_string();
                     }
-                    "auth_password" => {
+                    "password" => {
                         config.auth_password = value.to_string();
                     }
                     "auth_pubkey" => {
@@ -82,7 +83,7 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
                     "auth_privkey" => {
                         config.auth_privkey = value.to_string();
                     }
-                    "insecures_ssl" => {
+                    "insecure_ssl" => {
                         config.insecure_ssl = match FromStr::from_str(value) {
                             Ok(v) => v,
                             Err(e) => {
@@ -99,12 +100,71 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
                         config.ca_file = value.to_string();
                     }
                     "url" => {
-                        config.url = value.to_string();
+                        config.url = normalize_url(&value.to_string())?;
                     }
                     _ => {}
                 }
             }
         }
     }
+
+    if let Err(e) = validate_configuration(&config) {
+        return Err(e);
+    }
+
     Ok(config)
+}
+
+fn normalize_url(u: &String) -> Result<String, Box<dyn Error>> {
+    let parsed = Url::parse(u)?;
+
+    let scheme = parsed.scheme();
+
+    if scheme != "https" {
+        bail!("Invalid scheme: Icinga2 only supports https")
+    }
+
+    let host = match parsed.host_str() {
+        Some(v) => v,
+        None => {
+            bail!("Missing host in URL");
+        }
+    };
+    let port = match parsed.port() {
+        Some(v) => v,
+        None => 443, // scheme is always https
+    };
+
+    let n = format!("{}://{}:{}", scheme, host, port);
+    Ok(n)
+}
+
+fn validate_configuration(cfg: &Configuration) -> Result<(), Box<dyn Error>> {
+    if cfg.url.is_empty() {
+        bail!("Missing Icinga2 URL");
+    }
+
+    match cfg.auth {
+        constants::AUTH_USER => {
+            if cfg.auth_user.is_empty() {
+                bail!("User authentication enabled but no user set");
+            }
+
+            if cfg.auth_password.is_empty() {
+                bail!("User authentication enabled but no password set");
+            }
+        }
+        constants::AUTH_CERT => {
+            if cfg.auth_pubkey.is_empty() {
+                bail!("Client certificate authentication enabled but no public keyfile set");
+            }
+            if cfg.auth_privkey.is_empty() {
+                bail!("Client certificate authentication enabled but no private keyfile set");
+            }
+        }
+        _ => {
+            bail!("Invalid authentication method or authentication method not set");
+        }
+    };
+    Ok(())
 }

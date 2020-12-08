@@ -1,18 +1,21 @@
 [package]
 name = "icinga2ctl"
-version = "1.0.0-20201207"
+version = "1.0.0-20201208"
 authors = ["Andreas Maus <maus@badphish.ypbind.de>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+ansi_term = "0.12"
+base64 = "0.13"
 clap = "2.33"
 getopts = "0.2"
-reqwest = "0.10"
+http = "0.2"
+reqwest = { version = "0.10", features = [ "blocking", "native-tls" ]}
 rust-ini = "0.16"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 simple-error = "0.2"
+url = "2.2"
 uuid = { version = "0.8", features = ["v4"] }
-
