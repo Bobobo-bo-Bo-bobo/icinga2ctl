@@ -25,22 +25,3 @@ pub struct LastCheckResult {
     pub active: bool,
     pub output: String,
 }
-
-pub fn state_to_string(s: f64) -> String {
-    let mut ststr = "???";
-
-    if s == 0.0 {
-        ststr = "OK";
-    }
-    if s == 1.0 {
-        ststr = "WARNING";
-    }
-    if s == 2.0 {
-        ststr = "CRITICAL";
-    }
-    if s == 3.0 {
-        ststr = "UNKNOWN";
-    }
-
-    ststr.to_string()
-}

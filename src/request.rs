@@ -1,8 +1,6 @@
 use crate::configuration;
 use crate::constants;
 
-use base64;
-use reqwest;
 use reqwest::header;
 use std::error::Error;
 use std::fs;
@@ -35,12 +33,10 @@ pub fn build_client(
         bld = bld.danger_accept_invalid_certs(true);
         bld = bld.danger_accept_invalid_hostnames(true);
     // Adding a CA certificate is pointless if we don't validate the server certificate at all
-    } else {
-        if !cfg.ca_file.is_empty() {
-            let mut ca = fs::read(&cfg.ca_file)?;
-            let ca_cert = reqwest::Certificate::from_pem(&mut ca)?;
-            bld = bld.add_root_certificate(ca_cert);
-        }
+    } else if !cfg.ca_file.is_empty() {
+        let ca = fs::read(&cfg.ca_file)?;
+        let ca_cert = reqwest::Certificate::from_pem(&ca)?;
+        bld = bld.add_root_certificate(ca_cert);
     }
 
     // Note: Although RequestBuilder can handle basic auth, authentication using a client

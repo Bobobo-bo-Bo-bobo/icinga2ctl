@@ -3,6 +3,7 @@ use crate::constants;
 use crate::json_data;
 use crate::request;
 use crate::usage;
+use crate::util;
 
 use http::StatusCode;
 use std::error::Error;
@@ -14,10 +15,29 @@ pub fn status(
     let mut obj: &str = "";
     let mut attrs: &str = "";
     let mut filter = String::new();
+    let mut color = true;
+    let mut state_filter = ">=0";
 
     if opt.is_present("help") {
         usage::show_usage_status();
         return Ok(());
+    }
+
+    if opt.is_present("ok") {
+        state_filter = "==0";
+    }
+    if opt.is_present("warning") {
+        state_filter = "==1";
+    }
+    if opt.is_present("critical") {
+        state_filter = "==2";
+    }
+    if opt.is_present("unknown") {
+        state_filter = "== 3";
+    }
+
+    if opt.is_present("no-color") {
+        color = false;
     }
 
     let hosts = match opt.value_of("host_object") {
@@ -35,7 +55,10 @@ pub fn status(
     if !hosts.is_empty() && services.is_empty() {
         // Show host status for hosts
         obj = constants::ICINGA2_OBJ_HOST;
-        filter = format!("{{\"filter\":\"match(\\\"{}\\\", host.name)\"}}", hosts);
+        filter = format!(
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && host.state {}\"}}",
+            hosts, state_filter
+        );
         attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state";
     }
 
@@ -43,8 +66,8 @@ pub fn status(
         // Show services for all hosts
         obj = constants::ICINGA2_OBJ_SERVICE;
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", service.name)\"}}",
-            services
+            "{{\"filter\":\"match(\\\"{}\\\", service.name) && service.state {}\"}}",
+            services, state_filter
         );
         attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state";
     }
@@ -53,8 +76,8 @@ pub fn status(
         // Show services for hosts
         obj = constants::ICINGA2_OBJ_SERVICE;
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name)\"}}",
-            hosts, services
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && service.state {}\"}}",
+            hosts, services, state_filter
         );
         attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state";
     }
@@ -96,21 +119,29 @@ pub fn status(
         // if host_name is set, display_name is the name of the service
         match r.attrs.host_name {
             Some(v) => {
-                println!(
-                    "{host}: {service}: {status}: {output}",
-                    host = v,
-                    service = r.attrs.display_name,
-                    output = r.attrs.last_check_result.output,
-                    status = json_data::state_to_string(r.attrs.state)
+                util::print_state(
+                    &format!(
+                        "{host}: {service}: {status}: {output}",
+                        host = v,
+                        service = r.attrs.display_name,
+                        output = r.attrs.last_check_result.output.replace("\n", " "),
+                        status = util::state_to_string(r.attrs.state)
+                    ),
+                    util::state_to_string(r.attrs.state).as_str(),
+                    color,
                 );
             }
             None => {
                 if let Some(v) = r.attrs.name {
-                    println!(
-                        "{host}: {status}: {output}",
-                        host = v,
-                        output = r.attrs.last_check_result.output,
-                        status = json_data::state_to_string(r.attrs.state)
+                    util::print_state(
+                        &format!(
+                            "{host}: {status}: {output}",
+                            host = v,
+                            output = r.attrs.last_check_result.output.replace("\n", " "),
+                            status = util::state_to_string(r.attrs.state)
+                        ),
+                        util::state_to_string(r.attrs.state).as_str(),
+                        color,
                     );
                 }
             }

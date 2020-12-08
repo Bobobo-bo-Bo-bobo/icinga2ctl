@@ -35,7 +35,7 @@ pub fn get_default_user_config_file() -> Result<String, Box<dyn Error>> {
         bail!("Unable to get user configuration. Neither the environmant variable XDG_CONFIG_HOME nor HOME are set")
     }
     let cfg = cfgbase + "/icinga2ctl/config.ini";
-    return Ok(cfg);
+    Ok(cfg)
 }
 
 pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
@@ -115,7 +115,7 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
     Ok(config)
 }
 
-fn normalize_url(u: &String) -> Result<String, Box<dyn Error>> {
+fn normalize_url(u: &str) -> Result<String, Box<dyn Error>> {
     let parsed = Url::parse(u)?;
 
     let scheme = parsed.scheme();

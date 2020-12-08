@@ -7,6 +7,7 @@ mod constants;
 mod json_data;
 mod request;
 mod usage;
+mod util;
 
 use clap::{App, Arg, SubCommand};
 use std::process;
@@ -19,37 +20,57 @@ fn main() {
         .about("Interact with Icinga 2 instance")
         .args(&[
             Arg::with_name("config_file")
+                .help("Read configuration from <config_file>")
                 .short("c")
                 .long("config")
-                .takes_value(true)
-                .help("Configuration file"),
+                .takes_value(true),
             Arg::with_name("help")
+                .help("Show this text")
                 .short("h")
-                .long("help")
-                .help("Show help text"),
+                .long("help"),
             Arg::with_name("version")
+                .help("Show version information")
                 .short("v")
-                .long("version")
-                .help("Show version information"),
+                .long("version"),
         ])
         .subcommand(
             SubCommand::with_name("status")
                 .about("Show status of host and service objects")
                 .args(&[
                     Arg::with_name("host_object")
+                        .help("Show status of host <host_object>")
                         .short("H")
                         .long("host")
-                        .takes_value(true)
-                        .help("Show status of host objects"),
+                        .takes_value(true),
                     Arg::with_name("service_object")
+                        .help("Show status of service <service_object>")
                         .short("S")
                         .long("service")
-                        .takes_value(true)
-                        .help("Show status of service objects"),
+                        .takes_value(true),
                     Arg::with_name("help")
+                        .help("Show this text")
                         .short("h")
-                        .long("help")
-                        .help("Show help text for status command"),
+                        .long("help"),
+                    Arg::with_name("no-color")
+                        .help("Don't colorise output")
+                        .short("N")
+                        .long("no-color"),
+                    Arg::with_name("ok")
+                        .help("Show only host/services with OK state")
+                        .short("o")
+                        .long("ok"),
+                    Arg::with_name("warning")
+                        .help("Show only host/services with WARNING state")
+                        .short("w")
+                        .long("warning"),
+                    Arg::with_name("critical")
+                        .help("Show only host/services with CRITICAL state")
+                        .short("c")
+                        .long("critical"),
+                    Arg::with_name("unknown")
+                        .help("Show only host/services with UNKNOWN state")
+                        .short("u")
+                        .long("unknown"),
                 ]),
         )
         .get_matches();
