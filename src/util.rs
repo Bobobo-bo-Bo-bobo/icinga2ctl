@@ -12,10 +12,7 @@ pub fn state_to_string(s: f64) -> String {
 }
 
 pub fn print_state(s: &str, st: &str, a: f64, color: bool) {
-    let ack = match a.round() as i64 {
-        0 => false,
-        _ => true,
-    };
+    let ack = !matches!(a.round() as i64, 0);
 
     if color {
         match st {
