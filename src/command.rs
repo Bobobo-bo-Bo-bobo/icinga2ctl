@@ -18,6 +18,7 @@ pub fn status(
     let mut filter = String::new();
     let mut color = true;
     let mut state_map = HashMap::new();
+    let mut ack = -1;
 
     if opt.is_present("help") {
         usage::show_usage_status();
@@ -41,6 +42,17 @@ pub fn status(
         color = false;
     }
 
+    if let Some(v) = opt.value_of("ack") {
+        ack = match v {
+            "yes" => constants::ICINGA2_ACK_ACK,
+            "no" => constants::ICINGA2_ACK_NONE,
+            "sticky" => constants::ICINGA2_ACK_STICKY,
+            _ => {
+                bail!("Invalid value for acknowledgement option: {}", v);
+            }
+        };
+    };
+
     let hosts = match opt.value_of("host_object") {
         Some(v) => v.to_string(),
         None => String::new(),
@@ -56,10 +68,13 @@ pub fn status(
     if !hosts.is_empty() && services.is_empty() {
         // Show host status for hosts
         obj = constants::ICINGA2_OBJ_HOST;
+
         let state_filter = build_state_filter("host", &state_map);
+        let ack_filter = build_ack_filter("host", ack);
+
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", host.name) && {}\"}}",
-            hosts, state_filter
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && {} && {}\"}}",
+            hosts, state_filter, ack_filter,
         );
         attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
@@ -67,10 +82,13 @@ pub fn status(
     if hosts.is_empty() && !services.is_empty() {
         // Show services for all hosts
         obj = constants::ICINGA2_OBJ_SERVICE;
+
         let state_filter = build_state_filter("service", &state_map);
+        let ack_filter = build_ack_filter("service", ack);
+
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", service.name) && {}\"}}",
-            services, state_filter
+            "{{\"filter\":\"match(\\\"{}\\\", service.name) && {} && {}\"}}",
+            services, state_filter, ack_filter,
         );
         attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
@@ -78,10 +96,13 @@ pub fn status(
     if !hosts.is_empty() && !services.is_empty() {
         // Show services for hosts
         obj = constants::ICINGA2_OBJ_SERVICE;
+
         let state_filter = build_state_filter("service", &state_map);
+        let ack_filter = build_ack_filter("service", ack);
+
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && {}\"}}",
-            hosts, services, state_filter
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && {} && {}\"}}",
+            hosts, services, state_filter, ack_filter,
         );
         attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
@@ -165,4 +186,13 @@ fn build_state_filter(n: &str, m: &HashMap<String, String>) -> String {
         return format!("({})", v.join(" || "));
     }
     format!("{}.state >= 0", n)
+}
+
+fn build_ack_filter(n: &str, ack: i8) -> String {
+    match ack {
+        constants::ICINGA2_ACK_NONE => format!("{}.acknowledgement == 0", n),
+        constants::ICINGA2_ACK_ACK => format!("{}.acknowledgement == 1", n),
+        constants::ICINGA2_ACK_STICKY => format!("{}.acknowledgement == 2", n),
+        _ => format!("{}.acknowledgement >= 0", n),
+    }
 }
