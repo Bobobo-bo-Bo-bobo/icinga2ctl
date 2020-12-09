@@ -17,6 +17,7 @@ pub struct StatusResultAttrs {
     pub name: Option<String>,
     pub display_name: String,
     pub state: f64,
+    pub acknowledgement: f64,
     pub last_check_result: LastCheckResult,
 }
 

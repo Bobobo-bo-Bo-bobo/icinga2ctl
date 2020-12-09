@@ -61,7 +61,7 @@ pub fn status(
             "{{\"filter\":\"match(\\\"{}\\\", host.name) && {}\"}}",
             hosts, state_filter
         );
-        attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state";
+        attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
 
     if hosts.is_empty() && !services.is_empty() {
@@ -72,7 +72,7 @@ pub fn status(
             "{{\"filter\":\"match(\\\"{}\\\", service.name) && {}\"}}",
             services, state_filter
         );
-        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state";
+        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
 
     if !hosts.is_empty() && !services.is_empty() {
@@ -83,7 +83,7 @@ pub fn status(
             "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && {}\"}}",
             hosts, services, state_filter
         );
-        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state";
+        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
     }
 
     let req = request::build_client(cfg)?
@@ -132,6 +132,7 @@ pub fn status(
                         status = util::state_to_string(r.attrs.state)
                     ),
                     util::state_to_string(r.attrs.state).as_str(),
+                    r.attrs.acknowledgement,
                     color,
                 );
             }
@@ -145,6 +146,7 @@ pub fn status(
                             status = util::state_to_string(r.attrs.state)
                         ),
                         util::state_to_string(r.attrs.state).as_str(),
+                        r.attrs.acknowledgement,
                         color,
                     );
                 }

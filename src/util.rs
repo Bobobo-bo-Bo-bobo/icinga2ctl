@@ -11,20 +11,37 @@ pub fn state_to_string(s: f64) -> String {
     .to_string()
 }
 
-pub fn print_state(s: &str, st: &str, color: bool) {
+pub fn print_state(s: &str, st: &str, a: f64, color: bool) {
+    let ack = match a.round() as i64 {
+        0 => false,
+        _ => true,
+    };
+
     if color {
         match st {
             "OK" => {
                 println!("{}", Green.paint(s));
             }
             "WARNING" => {
-                println!("{}", Yellow.paint(s));
+                if ack {
+                    println!("{}", Yellow.paint(s));
+                } else {
+                    println!("{}", Yellow.bold().underline().paint(s));
+                }
             }
             "CRITICAL" => {
-                println!("{}", Red.paint(s));
+                if ack {
+                    println!("{}", Red.paint(s));
+                } else {
+                    println!("{}", Red.bold().underline().paint(s));
+                }
             }
             "UNKNOWN" => {
-                println!("{}", Purple.paint(s));
+                if ack {
+                    println!("{}", Purple.paint(s));
+                } else {
+                    println!("{}", Purple.bold().underline().paint(s));
+                }
             }
             _ => {
                 println!("{}", s);

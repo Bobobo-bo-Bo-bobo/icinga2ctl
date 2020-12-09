@@ -71,6 +71,11 @@ fn main() {
                         .help("Show only host/services with UNKNOWN state")
                         .short("u")
                         .long("unknown"),
+                    Arg::with_name("ack")
+                        .help("Show only states with an acknowledgment of <ack>")
+                        .short("A")
+                        .long("ack")
+                        .takes_value(true),
                 ]),
         )
         .get_matches();
