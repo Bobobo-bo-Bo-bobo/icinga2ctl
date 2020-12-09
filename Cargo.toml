@@ -1,6 +1,6 @@
 [package]
 name = "icinga2ctl"
-version = "1.0.0-20201208"
+version = "1.0.0-20201209"
 authors = ["Andreas Maus <maus@badphish.ypbind.de>"]
 edition = "2018"
 
