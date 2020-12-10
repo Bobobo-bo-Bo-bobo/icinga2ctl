@@ -26,3 +26,14 @@ pub struct LastCheckResult {
     pub active: bool,
     pub output: String,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct Icinga2ActionReply {
+    pub results: Vec<Icinga2ActionReplyResult>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Icinga2ActionReplyResult {
+    code: f64,
+    pub status: String,
+}

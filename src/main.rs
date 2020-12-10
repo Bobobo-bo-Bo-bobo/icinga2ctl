@@ -34,6 +34,53 @@ fn main() {
                 .long("version"),
         ])
         .subcommand(
+            SubCommand::with_name("add-ack")
+                .about("Add acknowledgement")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Show status of host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Show status of service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Acknowledgment author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("expire")
+                        .help("Set expiration for acknowledgement")
+                        .short("e")
+                        .long("expire")
+                        .takes_value(true),
+                    Arg::with_name("sticky")
+                        .help("Add sticky acknowledgement")
+                        .short("s")
+                        .long("sticky"),
+                    Arg::with_name("persistent")
+                        .help("Add persistent acknowledgement")
+                        .short("p")
+                        .long("persistent"),
+                    Arg::with_name("no-notification")
+                        .help("Don't send notification")
+                        .short("N")
+                        .long("no-notification"),
+                    Arg::with_name("comment")
+                        .help("Comment to add")
+                        .short("c")
+                        .long("comment")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("status")
                 .about("Show status of host and service objects")
                 .args(&[
@@ -116,6 +163,12 @@ fn main() {
     };
 
     match options.subcommand() {
+        ("add-ack", Some(m)) => {
+            if let Err(e) = command::add_ack(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
         ("status", Some(m)) => {
             if let Err(e) = command::status(&config, &m) {
                 println!("Error: {}", e);

@@ -7,6 +7,7 @@ use std::fs;
 
 pub fn build_client(
     cfg: &configuration::Configuration,
+    over: &str,
 ) -> Result<reqwest::blocking::Client, Box<dyn Error>> {
     let mut bld = reqwest::blocking::ClientBuilder::new().use_native_tls();
 
@@ -24,10 +25,12 @@ pub fn build_client(
         header::HeaderValue::from_str(constants::user_agent().as_str()).unwrap(),
     );
 
-    head.insert(
-        "X-HTTP-Method-Override",
-        header::HeaderValue::from_str("GET").unwrap(),
-    );
+    if !over.is_empty() {
+        head.insert(
+            "X-HTTP-Method-Override",
+            header::HeaderValue::from_str(over).unwrap(),
+        );
+    }
 
     if cfg.insecure_ssl {
         bld = bld.danger_accept_invalid_certs(true);
