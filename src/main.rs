@@ -81,6 +81,31 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("del-ack")
+                .about("Remove acknowledgement")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Show status of host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Show status of service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Acknowledgment author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("status")
                 .about("Show status of host and service objects")
                 .args(&[
@@ -165,6 +190,12 @@ fn main() {
     match options.subcommand() {
         ("add-ack", Some(m)) => {
             if let Err(e) = command::add_ack(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("del-ack", Some(m)) => {
+            if let Err(e) = command::del_ack(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
