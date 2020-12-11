@@ -19,7 +19,7 @@ pub fn del_ack(
     let mut state_map = HashMap::new();
 
     if opt.is_present("help") {
-        usage::show_usage_add_ack();
+        usage::show_usage_del_ack();
         return Ok(());
     };
 
