@@ -71,13 +71,25 @@ fn main() {
                         .long("no-notification"),
                     Arg::with_name("comment")
                         .help("Comment to add")
-                        .short("c")
+                        .short("C")
                         .long("comment")
                         .takes_value(true),
                     Arg::with_name("help")
                         .help("Show this text")
                         .short("h")
                         .long("help"),
+                    Arg::with_name("warning")
+                        .help("Show only host/services with WARNING state")
+                        .short("w")
+                        .long("warning"),
+                    Arg::with_name("critical")
+                        .help("Show only host/services with CRITICAL state")
+                        .short("c")
+                        .long("critical"),
+                    Arg::with_name("unknown")
+                        .help("Show only host/services with UNKNOWN state")
+                        .short("u")
+                        .long("unknown"),
                 ]),
         )
         .subcommand(
@@ -103,6 +115,18 @@ fn main() {
                         .help("Show this text")
                         .short("h")
                         .long("help"),
+                    Arg::with_name("warning")
+                        .help("Show only host/services with WARNING state")
+                        .short("w")
+                        .long("warning"),
+                    Arg::with_name("critical")
+                        .help("Show only host/services with CRITICAL state")
+                        .short("c")
+                        .long("critical"),
+                    Arg::with_name("unknown")
+                        .help("Show only host/services with UNKNOWN state")
+                        .short("u")
+                        .long("unknown"),
                 ]),
         )
         .subcommand(

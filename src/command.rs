@@ -16,6 +16,7 @@ pub fn del_ack(
 ) -> Result<(), Box<dyn Error>> {
     let mut ack_type = "";
     let mut filter = String::new();
+    let mut state_map = HashMap::new();
 
     if opt.is_present("help") {
         usage::show_usage_add_ack();
@@ -30,6 +31,16 @@ pub fn del_ack(
         Some(v) => v.to_string(),
         None => String::new(),
     };
+
+    if opt.is_present("warning") {
+        state_map.insert("==1".to_string(), String::new());
+    }
+    if opt.is_present("critical") {
+        state_map.insert("==2".to_string(), String::new());
+    }
+    if opt.is_present("unknown") {
+        state_map.insert("==3".to_string(), String::new());
+    }
 
     let author = match opt.value_of("author") {
         Some(v) => v.to_string(),
@@ -69,6 +80,14 @@ pub fn del_ack(
     if !hosts.is_empty() && !services.is_empty() {
         ack_type = "Service";
         filter = format!("match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && service.state_type == 1", hosts, services);
+    }
+
+    if !state_map.is_empty() {
+        filter = format!(
+            "{} && ({})",
+            filter,
+            build_state_filter(&ack_type.to_lowercase(), &state_map)
+        );
     }
 
     let payload = format!(
@@ -132,6 +151,7 @@ pub fn add_ack(
     let mut expire_stamp_str = String::new();
     let mut ack_type = "";
     let mut filter = String::new();
+    let mut state_map = HashMap::new();
 
     if opt.is_present("help") {
         usage::show_usage_add_ack();
@@ -183,6 +203,16 @@ pub fn add_ack(
         notify = false;
     }
 
+    if opt.is_present("warning") {
+        state_map.insert("==1".to_string(), String::new());
+    }
+    if opt.is_present("critical") {
+        state_map.insert("==2".to_string(), String::new());
+    }
+    if opt.is_present("unknown") {
+        state_map.insert("==3".to_string(), String::new());
+    }
+
     if !expire_str.is_empty() {
         match DateTime::parse_from_rfc3339(expire_str.as_str()) {
             Ok(v) => expire_stamp_str = format!("\"expiry\":{},", v.format("%s").to_string()),
@@ -215,7 +245,23 @@ pub fn add_ack(
         filter = format!("match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && service.state_type == 1", hosts, services);
     }
 
-    let payload = format!("{{\"type\":\"{acktype}\",\"filter\":\"{filter}\",\"author\":\"{author}\",\"comment\":\"{comment}\",{expiry}\"sticky\":{sticky},\"notify\":{notify},\"persistent\":{persistent}}}", acktype=ack_type, filter=filter, author=author, comment=comment, sticky=sticky, expiry=expire_stamp_str, notify=notify, persistent=persistent);
+    if !state_map.is_empty() {
+        filter = format!(
+            "{} && ({})",
+            filter,
+            build_state_filter(&ack_type.to_lowercase(), &state_map)
+        );
+    }
+
+    let payload = format!("{{\"type\":\"{acktype}\",\"filter\":\"{filter}\",\"author\":\"{author}\",\"comment\":\"{comment}\",{expiry}\"sticky\":{sticky},\"notify\":{notify},\"persistent\":{persistent}}}",
+                          acktype=ack_type,
+                          filter=filter,
+                          author=author,
+                          comment=comment,
+                          sticky=sticky,
+                          expiry=expire_stamp_str,
+                          notify=notify,
+                          persistent=persistent);
 
     let req = request::build_client(cfg, "")?
         .post(

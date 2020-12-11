@@ -89,8 +89,11 @@ pub fn show_usage_add_ack() {
         -a <author>                 Set author of acknowledgement
         --author=<author>           Default: current user
 
-        -c <comment>                Set acknowledgement comment
+        -C <comment>                Set acknowledgement comment
         --comment=<comment>         This option is mandatory.
+
+        -c                          Acknowledge host/services with CRITICAL state
+        --critical
 
         -e <time>                   Set acknowledgement expiration to <time>
         --expire=<time>             <expire> must be in the format as specified in RFC3339,
@@ -105,6 +108,12 @@ pub fn show_usage_add_ack() {
 
         -s                          Set sticky acknowledgement
         --sticky
+
+        -u                          Acknowledge host/services with UNKNOWN state
+        --unknown
+
+        -w                          Acknowledge host/services with WARNING state
+        --warning
 "
     );
 }
