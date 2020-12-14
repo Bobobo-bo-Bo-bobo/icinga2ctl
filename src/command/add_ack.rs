@@ -90,7 +90,7 @@ pub fn run(
     };
 
     if hosts.is_empty() && services.is_empty() {
-        bail!("Provide a host and/or service for status display");
+        bail!("Provide a host and/or service to add acknowledgement for.");
     }
 
     if !hosts.is_empty() && services.is_empty() {
@@ -137,7 +137,7 @@ pub fn run(
             format!(
                 "{url}{path}",
                 url = cfg.url,
-                path = constants::ICINGA2_ACK_PROBLEM,
+                path = constants::ICINGA2_ADD_ACK,
             )
             .as_str(),
         )
@@ -175,4 +175,3 @@ pub fn run(
 
     Ok(())
 }
-

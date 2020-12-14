@@ -20,4 +20,3 @@ pub fn build_ack_filter(n: &str, ack: i8) -> String {
         _ => format!("{}.acknowledgement >= 0", n),
     }
 }
-

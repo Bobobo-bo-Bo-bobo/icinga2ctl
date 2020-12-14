@@ -93,6 +93,69 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("add-downtime")
+                .about("Add downtime")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Show status of host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Show status of service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Downtime author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("all_services")
+                        .help("All services")
+                        .short("A")
+                        .long("all-services"),
+                    Arg::with_name("start")
+                        .help("Set start time for downtime")
+                        .short("s")
+                        .long("start")
+                        .takes_value(true),
+                    Arg::with_name("end")
+                        .help("Set end time for downtime")
+                        .short("e")
+                        .long("end")
+                        .takes_value(true),
+                    Arg::with_name("comment")
+                        .help("Comment to add")
+                        .short("C")
+                        .long("comment")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                    Arg::with_name("duration")
+                        .help("Set downtime duration for flexible downtime")
+                        .short("d")
+                        .long("duration")
+                        .takes_value(true),
+                    Arg::with_name("child_opts")
+                        .help("Schedule child downtime")
+                        .short("c")
+                        .long("child")
+                        .takes_value(true),
+                    Arg::with_name("fixed")
+                        .help("Add fixed downtime instead of a flexible downtime")
+                        .short("f")
+                        .long("fixed"),
+                    Arg::with_name("trigger")
+                        .help("Add trigger for triggered downtime")
+                        .short("t")
+                        .long("trigger")
+                        .takes_value(true),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("del-ack")
                 .about("Remove acknowledgement")
                 .args(&[
@@ -177,12 +240,12 @@ fn main() {
         .get_matches();
 
     if options.is_present("help") {
-        usage::usage::show();
+        usage::show();
         process::exit(0);
     }
 
     if options.is_present("version") {
-        usage::version::show();
+        usage::show();
         process::exit(1);
     }
 
@@ -218,6 +281,12 @@ fn main() {
                 process::exit(1);
             }
         }
+        ("add-downtime", Some(m)) => {
+            if let Err(e) = command::add_downtime::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
         ("del-ack", Some(m)) => {
             if let Err(e) = command::del_ack::run(&config, &m) {
                 println!("Error: {}", e);
@@ -232,7 +301,7 @@ fn main() {
         }
         _ => {
             eprintln!("Error: No command provided");
-            usage::usage::show();
+            usage::show();
             process::exit(1);
         }
     };

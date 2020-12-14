@@ -7,8 +7,9 @@ pub const AUTH_CERT: u8 = 0x02;
 
 pub const ICINGA2_OBJ_SERVICE: &str = "/v1/objects/services";
 pub const ICINGA2_OBJ_HOST: &str = "/v1/objects/hosts";
-pub const ICINGA2_ACK_PROBLEM: &str = "/v1/actions/acknowledge-problem";
+pub const ICINGA2_ADD_ACK: &str = "/v1/actions/acknowledge-problem";
 pub const ICINGA2_DEL_ACK: &str = "/v1/actions/remove-acknowledgement";
+pub const ICINGA2_ADD_DOWNTIME: &str = "/v1/actions/schedule-downtime";
 
 pub const ICINGA2_ACK_NONE: i8 = 0;
 pub const ICINGA2_ACK_ACK: i8 = 1;

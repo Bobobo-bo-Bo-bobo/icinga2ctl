@@ -35,5 +35,6 @@ pub struct Icinga2ActionReply {
 #[derive(Serialize, Deserialize)]
 pub struct Icinga2ActionReplyResult {
     code: f64,
+    pub name: Option<String>,
     pub status: String,
 }

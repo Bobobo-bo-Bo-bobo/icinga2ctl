@@ -10,7 +10,7 @@ use http::StatusCode;
 use std::collections::HashMap;
 use std::error::Error;
 
-pub fn run (
+pub fn run(
     cfg: &configuration::Configuration,
     opt: &clap::ArgMatches,
 ) -> Result<(), Box<dyn Error>> {
@@ -178,4 +178,3 @@ pub fn run (
     }
     Ok(())
 }
-

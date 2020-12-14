@@ -9,7 +9,7 @@ use http::StatusCode;
 use std::collections::HashMap;
 use std::error::Error;
 
-pub fn run (
+pub fn run(
     cfg: &configuration::Configuration,
     opt: &clap::ArgMatches,
 ) -> Result<(), Box<dyn Error>> {
@@ -57,7 +57,7 @@ pub fn run (
     };
 
     if hosts.is_empty() && services.is_empty() {
-        bail!("Provide a host and/or service for status display");
+        bail!("Provide a host and/or service for acknowledgement deletion");
     }
 
     if !hosts.is_empty() && services.is_empty() {
@@ -139,4 +139,3 @@ pub fn run (
 
     Ok(())
 }
-
