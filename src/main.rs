@@ -160,12 +160,12 @@ fn main() {
                 .about("Remove acknowledgement")
                 .args(&[
                     Arg::with_name("host_object")
-                        .help("Show status of host <host_object>")
+                        .help("Delete acknowledgement of host <host_object>")
                         .short("H")
                         .long("host")
                         .takes_value(true),
                     Arg::with_name("service_object")
-                        .help("Show status of service <service_object>")
+                        .help("Delete acknowledgement of service <service_object>")
                         .short("S")
                         .long("service")
                         .takes_value(true),
@@ -179,17 +179,47 @@ fn main() {
                         .short("h")
                         .long("help"),
                     Arg::with_name("warning")
-                        .help("Show only host/services with WARNING state")
+                        .help("Acknowledge only host/services with WARNING state")
                         .short("w")
                         .long("warning"),
                     Arg::with_name("critical")
-                        .help("Show only host/services with CRITICAL state")
+                        .help("Acknowledge only host/services with CRITICAL state")
                         .short("c")
                         .long("critical"),
                     Arg::with_name("unknown")
-                        .help("Show only host/services with UNKNOWN state")
+                        .help("Acknowledge only host/services with UNKNOWN state")
                         .short("u")
                         .long("unknown"),
+                ]),
+        )
+        .subcommand(
+            SubCommand::with_name("del-downtime")
+                .about("Remove downtime")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Remove downtime limited to host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Remove downtime limited to service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Downtime removal author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                    Arg::with_name("downtime_name")
+                        .help("Name of downtime to remove")
+                        .short("D")
+                        .long("downtime")
+                        .takes_value(true),
                 ]),
         )
         .subcommand(
@@ -289,6 +319,12 @@ fn main() {
         }
         ("del-ack", Some(m)) => {
             if let Err(e) = command::del_ack::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("del-downtime", Some(m)) => {
+            if let Err(e) = command::del_downtime::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
