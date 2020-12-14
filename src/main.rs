@@ -177,12 +177,12 @@ fn main() {
         .get_matches();
 
     if options.is_present("help") {
-        usage::show_usage();
+        usage::usage::show();
         process::exit(0);
     }
 
     if options.is_present("version") {
-        usage::show_version();
+        usage::version::show();
         process::exit(1);
     }
 
@@ -213,26 +213,26 @@ fn main() {
 
     match options.subcommand() {
         ("add-ack", Some(m)) => {
-            if let Err(e) = command::add_ack(&config, &m) {
+            if let Err(e) = command::add_ack::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
         }
         ("del-ack", Some(m)) => {
-            if let Err(e) = command::del_ack(&config, &m) {
+            if let Err(e) = command::del_ack::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
         }
         ("status", Some(m)) => {
-            if let Err(e) = command::status(&config, &m) {
+            if let Err(e) = command::status::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
         }
         _ => {
             eprintln!("Error: No command provided");
-            usage::show_usage();
+            usage::usage::show();
             process::exit(1);
         }
     };
