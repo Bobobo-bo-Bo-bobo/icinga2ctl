@@ -24,4 +24,10 @@ pub fn show() {
 ",
         constants::NAME
     );
+
+    usage::add_ack::show();
+    usage::add_downtime::show();
+    usage::del_ack::show();
+    usage::del_downtime::show();
+    usage::status::show();
 }

@@ -22,6 +22,7 @@ pub fn run(
     let mut ack = -1;
 
     if opt.is_present("help") {
+        usage::version::show();
         usage::status::show();
         return Ok(());
     }

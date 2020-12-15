@@ -23,6 +23,7 @@ pub fn run(
     let mut trigger_str = String::new();
 
     if opt.is_present("help") {
+        usage::version::show();
         usage::add_downtime::show();
         return Ok(());
     };

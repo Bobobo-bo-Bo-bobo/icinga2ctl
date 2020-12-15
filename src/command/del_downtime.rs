@@ -17,6 +17,7 @@ pub fn run(
     let mut filter_str = String::new();
 
     if opt.is_present("help") {
+        usage::version::show();
         usage::del_downtime::show();
         return Ok(());
     };

@@ -18,6 +18,7 @@ pub fn run(
     let mut state_map = HashMap::new();
 
     if opt.is_present("help") {
+        usage::version::show();
         usage::del_ack::show();
         return Ok(());
     };

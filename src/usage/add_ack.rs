@@ -1,7 +1,4 @@
-use crate::usage;
-
 pub fn show() {
-    usage::version::show();
     println!(
         "    add-ack - add acknowledgement
 
