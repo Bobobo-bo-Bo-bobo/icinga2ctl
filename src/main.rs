@@ -223,6 +223,21 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("generate-ticket")
+                .about("Generate PKI ticket for Icinga2 auto signing")
+                .args(&[
+                    Arg::with_name("cn")
+                        .help("Common name attribute of the host for which the ticket should be created")
+                        .short("C")
+                        .long("cn")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("reschedule-check")
                 .about("Reschedule checks of host and service objects")
                 .args(&[
@@ -375,6 +390,12 @@ fn main() {
         }
         ("del-downtime", Some(m)) => {
             if let Err(e) = command::del_downtime::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("generate-ticket", Some(m)) => {
+            if let Err(e) = command::generate_ticket::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }

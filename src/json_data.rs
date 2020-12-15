@@ -13,12 +13,12 @@ pub struct Icinga2StatusResult {
 
 #[derive(Serialize, Deserialize)]
 pub struct StatusResultAttrs {
-    pub host_name: Option<String>,
-    pub name: Option<String>,
-    pub display_name: String,
-    pub state: f64,
     pub acknowledgement: f64,
+    pub display_name: String,
+    pub host_name: Option<String>,
     pub last_check_result: LastCheckResult,
+    pub name: Option<String>,
+    pub state: f64,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -37,4 +37,5 @@ pub struct Icinga2ActionReplyResult {
     code: f64,
     pub name: Option<String>,
     pub status: String,
+    pub ticket: Option<String>,
 }

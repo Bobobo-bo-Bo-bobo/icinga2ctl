@@ -2,6 +2,7 @@ pub mod add_ack;
 pub mod add_downtime;
 pub mod del_ack;
 pub mod del_downtime;
+pub mod generate_ticket;
 pub mod reschedule_check;
 pub mod status;
 pub mod version;
@@ -22,6 +23,8 @@ pub fn show() {
 
     -v              Show version information
     --version
+
+  Commands:
 ",
         constants::NAME
     );
@@ -30,6 +33,7 @@ pub fn show() {
     usage::add_downtime::show();
     usage::del_ack::show();
     usage::del_downtime::show();
+    usage::generate_ticket::show();
     usage::reschedule_check::show();
     usage::status::show();
 }
