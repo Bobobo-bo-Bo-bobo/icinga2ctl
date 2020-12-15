@@ -11,6 +11,7 @@ pub fn run(
     cfg: &configuration::Configuration,
     opt: &clap::ArgMatches,
 ) -> Result<(), Box<dyn Error>> {
+    let mut flt_type = "";
     let mut filter = String::new();
     let mut author_str = String::new();
     let mut filter_str = String::new();
@@ -36,20 +37,29 @@ pub fn run(
 
     let downtime = match opt.value_of("downtime_name") {
         Some(v) => v.to_string(),
-        None => {
-            bail!("Downtime name is mandatody");
-        }
+        None => String::new(),
     };
 
+    if hosts.is_empty() && services.is_empty() && downtime.is_empty() {
+        bail!("Neither downtime name nor host/service filter provided");
+    }
+
+    if !(downtime.is_empty() || hosts.is_empty() || services.is_empty()) {
+        bail!("Provide either a downtime name or a host/service filter, but not both");
+    }
+
     if !hosts.is_empty() && services.is_empty() {
+        flt_type = "Host";
         filter = format!("match(\\\"{}\\\", host.name)", hosts);
     }
 
     if hosts.is_empty() && !services.is_empty() {
+        flt_type = "Service";
         filter = format!("match(\\\"{}\\\", service.name)", services);
     }
 
     if !hosts.is_empty() && !services.is_empty() {
+        flt_type = "Service";
         filter = format!(
             "match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name)",
             hosts, services
@@ -61,7 +71,7 @@ pub fn run(
     }
 
     if !filter.is_empty() {
-        filter_str = format!(",\"filter\":\"{}\"", filter);
+        filter_str = format!(",\"filter\":\"{}\",\"type\":\"{}\"", filter, flt_type);
     }
 
     let payload = format!(
