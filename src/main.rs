@@ -223,6 +223,56 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("reschedule-check")
+                .about("Reschedule checks of host and service objects")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Reschedule checks for host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Reschedule checks for service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                    Arg::with_name("force")
+                        .help("Force recheck")
+                        .short("f")
+                        .long("force"),
+                    Arg::with_name("ok")
+                        .help("Reschedule host/services checks with OK state")
+                        .short("o")
+                        .long("ok"),
+                    Arg::with_name("warning")
+                        .help("Reschedule host/services checks with WARNING state")
+                        .short("w")
+                        .long("warning"),
+                    Arg::with_name("critical")
+                        .help("Reschedule host/services checks with CRITICAL state")
+                        .short("c")
+                        .long("critical"),
+                    Arg::with_name("unknown")
+                        .help("Reschedule host/services checks with UNKNOWN state")
+                        .short("u")
+                        .long("unknown"),
+                    Arg::with_name("ack")
+                        .help("Only reschedule checks with <ack> acknowledgement type")
+                        .short("A")
+                        .long("ack")
+                        .takes_value(true),
+                    Arg::with_name("at")
+                        .help("Instead of rerun check immediately, run check at <time>")
+                        .short("a")
+                        .long("at")
+                        .takes_value(true),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("status")
                 .about("Show status of host and service objects")
                 .args(&[
@@ -325,6 +375,12 @@ fn main() {
         }
         ("del-downtime", Some(m)) => {
             if let Err(e) = command::del_downtime::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("reschedule-check", Some(m)) => {
+            if let Err(e) = command::reschedule_check::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
