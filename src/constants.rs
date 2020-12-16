@@ -1,5 +1,5 @@
 pub const NAME: &str = "icinga2ctl";
-pub const VERSION: &str = "0.7.0-2020121666666";
+pub const VERSION: &str = "0.9.0-20201216";
 const PROJECT_URL: &str = "https://git.ypbind.de/cgit/icinga2ctl";
 
 pub const AUTH_USER: u8 = 0x01;
