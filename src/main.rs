@@ -223,6 +223,36 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("del-comment")
+                .about("Remove comment")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Remove comment limited to host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Remove comment limited to service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Comment removal author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                    Arg::with_name("comment_name")
+                        .help("Name of comment to remove")
+                        .short("D")
+                        .long("comment")
+                        .takes_value(true),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("del-downtime")
                 .about("Remove downtime")
                 .args(&[
@@ -420,6 +450,12 @@ fn main() {
         }
         ("del-ack", Some(m)) => {
             if let Err(e) = command::del_ack::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("del-comment", Some(m)) => {
+            if let Err(e) = command::del_comment::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }

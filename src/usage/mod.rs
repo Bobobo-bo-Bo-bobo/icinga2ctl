@@ -2,6 +2,7 @@ pub mod add_ack;
 pub mod add_comment;
 pub mod add_downtime;
 pub mod del_ack;
+pub mod del_comment;
 pub mod del_downtime;
 pub mod generate_ticket;
 pub mod reschedule_check;
@@ -34,6 +35,7 @@ pub fn show() {
     usage::add_comment::show();
     usage::add_downtime::show();
     usage::del_ack::show();
+    usage::del_comment::show();
     usage::del_downtime::show();
     usage::generate_ticket::show();
     usage::reschedule_check::show();
