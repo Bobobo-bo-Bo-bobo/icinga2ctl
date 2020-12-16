@@ -373,7 +373,7 @@ dependencies = [
 
 [[package]]
 name = "icinga2ctl"
-version = "0.7.0-20201215"
+version = "0.7.0-20201216"
 dependencies = [
  "ansi_term 0.12.1",
  "base64",

@@ -93,6 +93,36 @@ fn main() {
                 ]),
         )
         .subcommand(
+            SubCommand::with_name("add-comment")
+                .about("Add comment")
+                .args(&[
+                    Arg::with_name("host_object")
+                        .help("Show status of host <host_object>")
+                        .short("H")
+                        .long("host")
+                        .takes_value(true),
+                    Arg::with_name("service_object")
+                        .help("Show status of service <service_object>")
+                        .short("S")
+                        .long("service")
+                        .takes_value(true),
+                    Arg::with_name("author")
+                        .help("Downtime author")
+                        .short("a")
+                        .long("author")
+                        .takes_value(true),
+                    Arg::with_name("comment")
+                        .help("Comment to add")
+                        .short("C")
+                        .long("comment")
+                        .takes_value(true),
+                    Arg::with_name("help")
+                        .help("Show this text")
+                        .short("h")
+                        .long("help"),
+                ]),
+        )
+        .subcommand(
             SubCommand::with_name("add-downtime")
                 .about("Add downtime")
                 .args(&[
@@ -372,6 +402,12 @@ fn main() {
     match options.subcommand() {
         ("add-ack", Some(m)) => {
             if let Err(e) = command::add_ack::run(&config, &m) {
+                println!("Error: {}", e);
+                process::exit(1);
+            }
+        }
+        ("add-comment", Some(m)) => {
+            if let Err(e) = command::add_comment::run(&config, &m) {
                 println!("Error: {}", e);
                 process::exit(1);
             }
