@@ -5,13 +5,13 @@ pub fn show() {
         -C <comment>                Set acknowledgement comment
         --comment=<comment>         This option is mandatory.
 
-        -H <host_object>            Show status of host <host_object>
+        -H <host_object>            Set acknowledgement for host <host_object>
         --host=<host_object>
 
         -N                          Don't send notification
         --no-notification
 
-        -S <service_object>         Show status of service <service_object>
+        -S <service_object>         Set acknowledgement for service <service_object>
         --service=<service_object>
 
         -a <author>                 Set author of acknowledgement

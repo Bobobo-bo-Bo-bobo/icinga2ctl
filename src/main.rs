@@ -38,12 +38,12 @@ fn main() {
                 .about("Add acknowledgement")
                 .args(&[
                     Arg::with_name("host_object")
-                        .help("Show status of host <host_object>")
+                        .help("Set acknowledgement for host <host_object>")
                         .short("H")
                         .long("host")
                         .takes_value(true),
                     Arg::with_name("service_object")
-                        .help("Show status of service <service_object>")
+                        .help("Set acknowledgement for service <service_object>")
                         .short("S")
                         .long("service")
                         .takes_value(true),
@@ -79,15 +79,15 @@ fn main() {
                         .short("h")
                         .long("help"),
                     Arg::with_name("warning")
-                        .help("Show only host/services with WARNING state")
+                        .help("Acknowledge host/services with WARNING state")
                         .short("w")
                         .long("warning"),
                     Arg::with_name("critical")
-                        .help("Show only host/services with CRITICAL state")
+                        .help("Acknowledge host/services with CRITICAL state")
                         .short("c")
                         .long("critical"),
                     Arg::with_name("unknown")
-                        .help("Show only host/services with UNKNOWN state")
+                        .help("Acknowledge host/services with UNKNOWN state")
                         .short("u")
                         .long("unknown"),
                 ]),
@@ -97,12 +97,12 @@ fn main() {
                 .about("Add comment")
                 .args(&[
                     Arg::with_name("host_object")
-                        .help("Show status of host <host_object>")
+                        .help("Add comment for host <host_object>")
                         .short("H")
                         .long("host")
                         .takes_value(true),
                     Arg::with_name("service_object")
-                        .help("Show status of service <service_object>")
+                        .help("Add comment for service <service_object>")
                         .short("S")
                         .long("service")
                         .takes_value(true),
@@ -127,12 +127,12 @@ fn main() {
                 .about("Add downtime")
                 .args(&[
                     Arg::with_name("host_object")
-                        .help("Show status of host <host_object>")
+                        .help("Schedule downtime for host <host_object>")
                         .short("H")
                         .long("host")
                         .takes_value(true),
                     Arg::with_name("service_object")
-                        .help("Show status of service <service_object>")
+                        .help("Schedule downtime for service <service_object>")
                         .short("S")
                         .long("service")
                         .takes_value(true),
@@ -209,15 +209,15 @@ fn main() {
                         .short("h")
                         .long("help"),
                     Arg::with_name("warning")
-                        .help("Acknowledge only host/services with WARNING state")
+                        .help("Delete acknowledgement for host/services with WARNING state")
                         .short("w")
                         .long("warning"),
                     Arg::with_name("critical")
-                        .help("Acknowledge only host/services with CRITICAL state")
+                        .help("Delete acknowledgement for host/services with CRITICAL state")
                         .short("c")
                         .long("critical"),
                     Arg::with_name("unknown")
-                        .help("Acknowledge only host/services with UNKNOWN state")
+                        .help("Delete acknowledgement for host/services with UNKNOWN state")
                         .short("u")
                         .long("unknown"),
                 ]),

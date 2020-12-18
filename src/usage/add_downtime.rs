@@ -8,10 +8,10 @@ pub fn show() {
         -C <comment>                Set downtime comment.
         --comment=<comment>         This option is mandatory.
 
-        -H <host_object>            Show status of host <host_object>
+        -H <host_object>            Schedule downtime for host <host_object>
         --host=<host_object>
 
-        -S <service_object>         Show status of service <service_object>
+        -S <service_object>         Schedule downtime for service <service_object>
         --service=<service_object>
 
         -a <author>                 Set author of downtime
