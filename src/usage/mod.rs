@@ -1,6 +1,7 @@
 pub mod add_ack;
 pub mod add_comment;
 pub mod add_downtime;
+pub mod cmd_help;
 pub mod del_ack;
 pub mod del_comment;
 pub mod del_downtime;

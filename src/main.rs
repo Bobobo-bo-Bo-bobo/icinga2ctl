@@ -404,6 +404,30 @@ fn main() {
         process::exit(1);
     }
 
+    // peek into the subcommand options. if -h/--help is in the subcommand options, don't try to
+    // read the configuration file
+    match options.subcommand() {
+        (cmd, Some(m)) => {
+            if m.is_present("help") {
+                match usage::cmd_help::show(cmd) {
+                    Ok(_) => {
+                        process::exit(0);
+                    }
+                    Err(e) => {
+                        eprintln!("Error: {}", e);
+                        usage::show();
+                        process::exit(1);
+                    }
+                };
+            };
+        }
+        (_, _) => {
+            eprintln!("Error: No command provided or unknown command");
+            usage::show();
+            process::exit(1);
+        }
+    };
+
     if let Some(v) = options.value_of("config_file") {
         config_file = v.to_string();
     }
@@ -485,7 +509,7 @@ fn main() {
             }
         }
         _ => {
-            eprintln!("Error: No command provided");
+            eprintln!("Error: No command provided or unknown command");
             usage::show();
             process::exit(1);
         }
