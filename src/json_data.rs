@@ -19,6 +19,7 @@ pub struct StatusResultAttrs {
     pub last_check_result: LastCheckResult,
     pub name: Option<String>,
     pub state: f64,
+    pub state_type: f64,
 }
 
 #[derive(Serialize, Deserialize)]
