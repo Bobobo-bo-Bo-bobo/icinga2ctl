@@ -390,6 +390,11 @@ fn main() {
                         .short("A")
                         .long("ack")
                         .takes_value(true),
+                    Arg::with_name("state_type")
+                        .help("Show only states in <type> state type")
+                        .long("state-type")
+                        .short("s")
+                        .takes_value(true),
                 ]),
         )
         .get_matches();

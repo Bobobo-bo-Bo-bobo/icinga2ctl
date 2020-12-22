@@ -20,6 +20,7 @@ pub fn run(
     let mut color = true;
     let mut state_map = HashMap::new();
     let mut ack = -1;
+    let mut state_type_filter = "state_type >= 0";
 
     if opt.is_present("help") {
         usage::version::show();
@@ -43,6 +44,17 @@ pub fn run(
     if opt.is_present("no-color") {
         color = false;
     }
+
+    if let Some(v) = opt.value_of("state_type") {
+        state_type_filter = match v {
+            "hard" => "state_type == 1",
+            "soft" => "state_type == 0",
+            "both" => "state_type >= 0",
+            _ => {
+                bail!("Invalid value for state type option: {}", v);
+            }
+        };
+    };
 
     if let Some(v) = opt.value_of("ack") {
         ack = match v {
@@ -76,10 +88,10 @@ pub fn run(
         let ack_filter = command::filter::build_ack_filter("host", ack);
 
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", host.name) && {} && {}\"}}",
-            hosts, state_filter, ack_filter,
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && {} && {} && host.{}\"}}",
+            hosts, state_filter, ack_filter, state_type_filter
         );
-        attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
+        attrs = "attrs=name&attrs=display_name&attrs=last_check_result&attrs=state&attrs=acknowledgement&attrs=state_type";
     }
 
     if hosts.is_empty() && !services.is_empty() {
@@ -90,10 +102,10 @@ pub fn run(
         let ack_filter = command::filter::build_ack_filter("service", ack);
 
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", service.name) && {} && {}\"}}",
-            services, state_filter, ack_filter,
+            "{{\"filter\":\"match(\\\"{}\\\", service.name) && {} && {} && service.{}\"}}",
+            services, state_filter, ack_filter, state_type_filter,
         );
-        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
+        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement&attrs=state_type";
     }
 
     if !hosts.is_empty() && !services.is_empty() {
@@ -104,10 +116,10 @@ pub fn run(
         let ack_filter = command::filter::build_ack_filter("service", ack);
 
         filter = format!(
-            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && {} && {}\"}}",
-            hosts, services, state_filter, ack_filter,
+            "{{\"filter\":\"match(\\\"{}\\\", host.name) && match(\\\"{}\\\", service.name) && {} && {} && service.{}\"}}",
+            hosts, services, state_filter, ack_filter, state_type_filter,
         );
-        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement";
+        attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement&attrs=state_type";
     }
 
     let req = request::build_client(cfg, "GET")?

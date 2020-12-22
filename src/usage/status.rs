@@ -27,6 +27,14 @@ pub fn show() {
         -o                          Show host/services with OK state
         --ok
 
+        -s <type>                   Show states in <type> state type
+                                        hard - hard states
+                                        soft - soft states
+                                        both - hard and soft states
+                                    Default: both
+
+        --state-type=<type>
+
         -u                          Show host/services with UNKNOWN state
         --unknown
 
