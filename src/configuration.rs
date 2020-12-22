@@ -13,8 +13,8 @@ pub struct Configuration {
     pub auth: u8,
     pub auth_user: String,
     pub auth_password: String,
-    pub auth_pubkey: String,
-    pub auth_privkey: String,
+    pub auth_cert: String,
+    pub auth_cert_password: String,
 }
 
 pub fn get_default_user_config_file() -> Result<String, Box<dyn Error>> {
@@ -46,8 +46,8 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
         auth: constants::AUTH_USER,
         auth_user: String::new(),
         auth_password: String::new(),
-        auth_pubkey: String::new(),
-        auth_privkey: String::new(),
+        auth_cert: String::new(),
+        auth_cert_password: String::new(),
     };
 
     let cfg = Ini::load_from_file(f)?;
@@ -77,11 +77,11 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
                     "password" => {
                         config.auth_password = value.to_string();
                     }
-                    "auth_pubkey" => {
-                        config.auth_pubkey = value.to_string();
+                    "auth_cert" => {
+                        config.auth_cert = value.to_string();
                     }
-                    "auth_privkey" => {
-                        config.auth_privkey = value.to_string();
+                    "auth_cert_password" => {
+                        config.auth_cert_password = value.to_string();
                     }
                     "insecure_ssl" => {
                         config.insecure_ssl = match FromStr::from_str(value) {
@@ -155,11 +155,8 @@ fn validate_configuration(cfg: &Configuration) -> Result<(), Box<dyn Error>> {
             }
         }
         constants::AUTH_CERT => {
-            if cfg.auth_pubkey.is_empty() {
-                bail!("Client certificate authentication enabled but no public keyfile set");
-            }
-            if cfg.auth_privkey.is_empty() {
-                bail!("Client certificate authentication enabled but no private keyfile set");
+            if cfg.auth_cert.is_empty() {
+                bail!("Client certificate authentication enabled but no certificate file set");
             }
         }
         _ => {

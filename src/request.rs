@@ -59,7 +59,11 @@ pub fn build_client(
                 .unwrap(),
             );
         }
-        constants::AUTH_CERT => {}
+        constants::AUTH_CERT => {
+            let raw_cert = fs::read(&cfg.auth_cert)?;
+            let pkcs12 = reqwest::Identity::from_pkcs12_der(&raw_cert, &cfg.auth_cert_password)?;
+            bld = bld.identity(pkcs12);
+        }
         _ => {
             panic!("BUG: Invalid authentication method");
         }
