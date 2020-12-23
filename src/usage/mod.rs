@@ -16,10 +16,13 @@ use crate::usage;
 pub fn show() {
     usage::version::show();
     println!(
-        "Usage: {} -c <cfg>|--config=<cfg> [-h|--help] [-v|--version] <command> [<command_options>...]
+        "Usage: {} -c <cfg>|--config=<cfg> [-d|--debug] [-h|--help] [-v|--version] <command> [<command_options>...]
 
     -c <cfg>        Read configuration from <cfg>
     --config <cfg>  This parameter is mandatory
+
+    -d              Enable debug output
+    --debug
 
     -h              Shows this text
     --help

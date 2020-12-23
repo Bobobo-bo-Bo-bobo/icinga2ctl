@@ -77,6 +77,12 @@ pub fn run(
                           filter=filter,
                           );
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_ADD_COMMENT);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

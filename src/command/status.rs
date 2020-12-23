@@ -122,6 +122,12 @@ pub fn run(
         attrs = "attrs=display_name&attrs=host_name&attrs=last_check_result&attrs=state&attrs=acknowledgement&attrs=state_type";
     }
 
+    if cfg.debug {
+        eprintln!("HTTP method: GET");
+        eprintln!("URL: {}{}?{}", cfg.url, obj, attrs);
+        eprintln!("Payload: {}", filter);
+    }
+
     let req = request::build_client(cfg, "GET")?
         .post(
             format!(

@@ -97,6 +97,12 @@ pub fn run(
         author = author
     );
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_DEL_ACK);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

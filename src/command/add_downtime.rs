@@ -171,6 +171,12 @@ pub fn run(
                           trigger=trigger_str,
                           );
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_ADD_DOWNTIME);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

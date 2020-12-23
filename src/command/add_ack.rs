@@ -133,6 +133,12 @@ pub fn run(
                           notify=notify,
                           persistent=persistent);
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_ADD_ACK);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

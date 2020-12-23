@@ -130,6 +130,12 @@ pub fn run(
         at_str = at_stamp_str,
     );
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_RESCHEDULE_CHECK);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

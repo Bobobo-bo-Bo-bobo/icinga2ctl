@@ -9,10 +9,10 @@ pub fn show() {
                                     Note: Hosts/services in OK state have no acknowledgment set,
                                           except for sticky acknowledgements.
 
-		-H <host_object>			Reschedule checks for host <host_object>
+        -H <host_object>            Reschedule checks for host <host_object>
         --host=<host_object>
 
-        -S <service_object>			Reschedule checks for service <service_object>
+        -S <service_object>         Reschedule checks for service <service_object>
         --service=<service_object>
  
         -a <time>                   Instead of rerun check immediately, run check at <time>
@@ -23,7 +23,7 @@ pub fn show() {
         -c                          Reschedule host/services checks with CRITICAL state
         --critical
 
-        -f							Force recheck
+        -f                          Force recheck
         --force
 
         -h                          Show this text

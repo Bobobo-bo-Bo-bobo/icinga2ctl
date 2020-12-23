@@ -26,6 +26,12 @@ pub fn run(
 
     let payload = format!("{{\"cn\":\"{}\"}}", cn);
 
+    if cfg.debug {
+        eprintln!("HTTP method: POST");
+        eprintln!("URL: {}{}", cfg.url, constants::ICINGA2_GENERATE_TICKET);
+        eprintln!("Payload: {}", payload);
+    }
+
     let req = request::build_client(cfg, "")?
         .post(
             format!(

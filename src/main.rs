@@ -32,6 +32,10 @@ fn main() {
                 .help("Show version information")
                 .short("v")
                 .long("version"),
+            Arg::with_name("debug")
+                .help("Show debug information")
+                .long("debug")
+                .short("-d"),
         ])
         .subcommand(
             SubCommand::with_name("add-ack")

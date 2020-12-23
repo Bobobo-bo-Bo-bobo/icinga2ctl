@@ -15,6 +15,7 @@ pub struct Configuration {
     pub auth_password: String,
     pub auth_cert: String,
     pub auth_cert_password: String,
+    pub debug: bool,
 }
 
 pub fn get_default_user_config_file() -> Result<String, Box<dyn Error>> {
@@ -48,6 +49,7 @@ pub fn get_configuration(f: &str) -> Result<Configuration, Box<dyn Error>> {
         auth_password: String::new(),
         auth_cert: String::new(),
         auth_cert_password: String::new(),
+        debug: false,
     };
 
     let cfg = Ini::load_from_file(f)?;
