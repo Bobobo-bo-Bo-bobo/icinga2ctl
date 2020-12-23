@@ -451,7 +451,7 @@ fn main() {
         };
     }
 
-    let config = match configuration::get_configuration(config_file.as_str()) {
+    let mut config = match configuration::get_configuration(config_file.as_str()) {
         Ok(v) => v,
         Err(e) => {
             eprintln!(
@@ -461,6 +461,10 @@ fn main() {
             process::exit(1);
         }
     };
+
+    if options.is_present("debug") {
+        config.debug = true;
+    }
 
     match options.subcommand() {
         ("add-ack", Some(m)) => {
